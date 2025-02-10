@@ -22,6 +22,17 @@ const CanchaSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  calificacion: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 5,
+  },
+  servicio: {
+    type: String,
+    required: true,
+    enum: ['sintética', 'básquet', 'vóley', 'fútbol', 'tenis', 'piscina', 'otros'], // Valores permitidos
+  },
 });
 
 // Crear el modelo de Cancha
