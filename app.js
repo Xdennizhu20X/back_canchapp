@@ -7,11 +7,13 @@ const cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var jugadorouter = require('./routes/jugador')
 var usuariorouter = require('./routes/usuario')
 var cancharouter = require('./routes/cancha')
 var gruporouter = require('./routes/grupo')
 var reservarouter = require('./routes/reserva')
 var invitacionrouter = require('./routes/invitacion')
+
 var db = require('./conexions/mongo');
 
 
@@ -36,11 +38,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api',jugadorouter );
 app.use('/api',usuariorouter );
 app.use('/api',cancharouter );
 app.use('/api',invitacionrouter );
 app.use('/api',gruporouter );
 app.use('/api',reservarouter );
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
