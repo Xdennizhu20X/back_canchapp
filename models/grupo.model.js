@@ -1,12 +1,10 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require("mongoose");
 
-const grupoSchema = new Schema({
+const grupoSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
   descripcion: { type: String, required: true },
-  integrantes: [{ type: Schema.Types.ObjectId, ref: 'Usuario' }], // Relación con usuarios
-  fechaCreacion: { type: Date, default: Date.now },
+  integrantes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Usuario" }] // Referencia a Usuarios
 });
 
-const Grupo = mongoose.model('Grupo', grupoSchema);
+const Grupo = mongoose.model("Grupo", grupoSchema);
 module.exports = Grupo;

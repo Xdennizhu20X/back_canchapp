@@ -20,9 +20,15 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use('/uploads', express.static('uploads'));
+
 app.use(logger('dev'));
-app.use(cors());
+app.use(cors({
+  origin: "*", // O reemplaza con 'http://localhost:50512' si es necesario
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

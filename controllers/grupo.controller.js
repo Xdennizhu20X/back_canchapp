@@ -1,14 +1,27 @@
 const Grupo = require('../models/grupo.model');
+const mongoose = require("mongoose");
 
 // Crear un grupo
 exports.crearGrupo = async (req, res) => {
   try {
+    console.log("📩 Datos recibidos:", req.body);
     const { nombre, descripcion, integrantes } = req.body;
-    const grupo = new Grupo({ nombre, descripcion, integrantes });
-    await grupo.save();
-    res.status(201).json(grupo);
-  } catch (err) {
-    res.status(400).json({ message: 'Error al crear grupo', error: err });
+
+    // Asegurar que los integrantes sean ObjectId válidos
+    const integrantesObjectIds = integrantes.map(id => new mongoose.Types.ObjectId(id));
+
+    const nuevoGrupo = new Grupo({
+      nombre,
+      descripcion,
+      integrantes: integrantesObjectIds
+    });
+
+    await nuevoGrupo.save();
+    res.status(201).json({ message: "Grupo creado exitosamente", grupo: nuevoGrupo });
+
+  } catch (error) {
+    console.error("Error al crear el grupo:", error);
+    res.status(500).json({ message: "Error en el servidor" });
   }
 };
 
