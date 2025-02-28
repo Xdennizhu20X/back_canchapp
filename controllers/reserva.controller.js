@@ -55,8 +55,9 @@ exports.obtenerReservas = async (req, res) => {
 
     // Obtener reservas del usuario
     let reservas = await Reserva.find({ usuario: usuarioId })
-      .populate("usuario", "nombre")
-      .populate("servicio", "nombre");
+      .populate("usuario", "nombre") // Nombre del usuario
+      .populate("servicio", "nombre") // Nombre del servicio
+      .populate("espacio", "nombre"); // Nombre del espacio
 
     // Filtrar por servicioId si se proporciona
     if (servicioId) {

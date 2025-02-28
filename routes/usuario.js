@@ -11,5 +11,6 @@ router.get('/usuarios', UsuarioController.obtenerUsuarios);
 
 // Ruta exclusiva para "dueños"
 router.get('/usuarios-protegidos', UsuarioController.verificarToken, UsuarioController.verificarDueno, UsuarioController.obtenerUsuarios);
+router.get('/usuario/:id', UsuarioController.verificarToken, UsuarioController.obtenerUsuarioPorId);
 
 module.exports = router;

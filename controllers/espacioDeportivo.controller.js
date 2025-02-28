@@ -1,22 +1,11 @@
 const EspacioDeportivo = require("../models/espacio_deportivo.model");
-const multer = require("multer");
-
-// Configuración de Multer para subir imágenes
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Carpeta donde se guardarán las imágenes
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});
-const upload = multer({ storage: storage });
+const { upload } = require("../config/cloudinary");
 
 // Crear un espacio deportivo (un usuario solo puede tener uno)
 const crearEspacioDeportivo = async (req, res) => {
   try {
     const { nombre, ubicacion, propietario, descripcion } = req.body;
-    const imagen = req.file ? `/uploads/${req.file.filename}` : null;
+    const imagen = req.file ? req.file.path : null; // Obtener la URL de Cloudinary
 
     // Verificar si el usuario ya tiene un espacio deportivo
     const existe = await EspacioDeportivo.findOne({ propietario });
@@ -44,7 +33,7 @@ const editarEspacioDeportivo = async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, ubicacion, descripcion } = req.body;
-    const imagen = req.file ? `/uploads/${req.file.filename}` : null;
+    const imagen = req.file ? req.file.path : null;
 
     const espacio = await EspacioDeportivo.findById(id);
     if (!espacio) {
@@ -54,7 +43,7 @@ const editarEspacioDeportivo = async (req, res) => {
     if (nombre) espacio.nombre = nombre;
     if (ubicacion) espacio.ubicacion = ubicacion;
     if (descripcion) espacio.descripcion = descripcion;
-    if (imagen) espacio.imagen = imagen;
+    if (imagen) espacio.imagen = imagen; // Actualizar imagen con URL de Cloudinary
 
     await espacio.save();
     res.json(espacio);
@@ -67,8 +56,8 @@ const editarEspacioDeportivo = async (req, res) => {
 const obtenerEspaciosDeportivos = async (req, res) => {
   try {
     const espacios = await EspacioDeportivo.find()
-      .populate("propietario", "nombre email") // Obtener datos del propietario
-      .populate("servicios"); // Obtener servicios asociados
+      .populate("propietario", "nombre email")
+      .populate("servicios");
 
     res.json(espacios);
   } catch (error) {
@@ -82,8 +71,8 @@ const obtenerEspaciosPorPropietario = async (req, res) => {
     const { propietarioId } = req.params;
 
     const espacios = await EspacioDeportivo.find({ propietario: propietarioId })
-      .populate("propietario", "nombre email") // Obtener datos del propietario
-      .populate("servicios"); // Obtener servicios asociados
+      .populate("propietario", "nombre email")
+      .populate("servicios");
 
     if (espacios.length === 0) {
       return res.status(404).json({ mensaje: "No se encontraron espacios deportivos para este propietario" });
@@ -101,5 +90,3 @@ module.exports = {
   obtenerEspaciosDeportivos,
   obtenerEspaciosPorPropietario
 };
-
-

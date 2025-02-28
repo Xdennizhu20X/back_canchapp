@@ -9,7 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var jugadorouter = require('./routes/jugador')
 var usuariorouter = require('./routes/usuario')
-var cancharouter = require('./routes/cancha')
+// var cancharouter = require('./routes/cancha')
 var gruporouter = require('./routes/grupo')
 var espaciorouter = require('./routes/espacioDeportivo')
 var serviciorouter = require('./routes/servicios')
@@ -34,6 +34,9 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/uploads', cors(), express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -47,7 +50,7 @@ app.use('/api',jugadorouter );
 
 app.use('/api',usuariorouter );
 
-app.use('/api',cancharouter );
+// app.use('/api',cancharouter );
 
 
 app.use('/api',invitacionrouter );
@@ -56,7 +59,7 @@ app.use('/api',invitacionrouter );
 app.use('/api',gruporouter );
 
 
-app.use('/api',espaciorouter );
+app.use('/api/espacio',espaciorouter );
 
 app.use('/api',serviciorouter );
 

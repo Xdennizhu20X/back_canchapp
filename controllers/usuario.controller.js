@@ -7,7 +7,7 @@ const UsuarioController = {
   // Registrar un usuario
   async registrarse(req, res) {
     try {
-      const { nombre, email, password, rol } = req.body;
+      const { nombre, email, password, rol, telefono } = req.body;
 
       // Verificar si el email ya está en uso
       const usuarioExistente = await Usuario.findOne({ email });
@@ -25,7 +25,7 @@ const UsuarioController = {
       const passwordHash = await bcrypt.hash(password, salt);
 
       // Crear usuario
-      const nuevoUsuario = new Usuario({ nombre, email, password: passwordHash, rol });
+      const nuevoUsuario = new Usuario({ nombre, email, password: passwordHash, rol, telefono });
       const usuarioGuardado = await nuevoUsuario.save();
 
       res.status(201).json({ mensaje: 'Usuario registrado con éxito', usuario: usuarioGuardado });
@@ -97,12 +97,28 @@ const UsuarioController = {
   // Obtener todos los usuarios (solo dueños pueden acceder)
   async obtenerUsuarios(req, res) {
     try {
-      const usuarios = await Usuario.find();
+      const usuarios = await Usuario.find().select('-password');
       res.status(200).json(usuarios);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   },
+
+  // Obtener usuario por ID
+  async obtenerUsuarioPorId(req, res) {
+    try {
+      const { id } = req.params;
+      const usuario = await Usuario.findById(id).select('-password'); // Excluir contraseña por seguridad
+
+      if (!usuario) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
+
+      res.status(200).json(usuario);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 };
 
 module.exports = UsuarioController;

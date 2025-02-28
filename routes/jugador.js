@@ -8,5 +8,6 @@ router.get('/jugadores', JugadorController.obtenerJugadores);
 router.get('/jugadores/:id', JugadorController.obtenerJugadorPorId);
 router.put('/jugadores/:id', JugadorController.actualizarJugador);
 router.delete('/jugadores/:id', JugadorController.eliminarJugador);
+router.get('/jugadores/usuario/:usuarioId', JugadorController.obtenerJugadorPorUsuarioId);
 
 module.exports = router;
