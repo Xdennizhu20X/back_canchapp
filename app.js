@@ -27,6 +27,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
+app.options('*', cors()); // Permitir preflight para todas las rutas
 app.use(cors({
   origin: "*", // O reemplaza con 'http://localhost:50512' si es necesario
   methods: ["GET", "POST", "PUT", "DELETE"],
