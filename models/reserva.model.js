@@ -3,9 +3,10 @@ const mongoose = require("mongoose");
 const reservaSchema = new mongoose.Schema({
   usuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true },
   servicio: { type: mongoose.Schema.Types.ObjectId, ref: "Servicio", required: true },
+  espacio: { type: mongoose.Schema.Types.ObjectId, ref: "EspacioDeportivo", required: true },
   fecha: { type: String, required: true }, // "YYYY-MM-DD"
   hora: { type: String, required: true }, // "HH:mm"
-  estado: { type: String, enum: ["Pendiente", "Confirmada", "Cancelada"], default: "Pendiente" },
+  estado: { type: String, enum: ["Pendiente", "Confirmada", "Cancelada", "Terminada"], default: "Pendiente" },
 });
 
 // Evita reservas duplicadas para el mismo servicio, fecha y hora
@@ -35,5 +36,6 @@ reservaSchema.pre("validate", async function (next) {
     next(error);
   }
 });
+
 
 module.exports = mongoose.model("Reserva", reservaSchema);
