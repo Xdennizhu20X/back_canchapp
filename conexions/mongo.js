@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
+require('dotenv').config(); // Cargar variables de entorno desde .env
 
-const dbURI =  'mongodb://127.0.0.1:27017/boda_milton'; // Usa la variable de entorno o la URI local por defecto
+const dbURI = process.env.MONGODB_URI; // Solo usa la variable de entorno
+
+if (!dbURI) {
+  console.error('Error: La variable de entorno MONGODB_URI no está definida.');
+  process.exit(1); // Terminar el proceso si no está definida
+}
 
 mongoose.connect(dbURI);
 

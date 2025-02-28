@@ -1,6 +1,7 @@
 const Usuario = require('../models/usuario.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+require('dotenv').config(); // Cargar variables de entorno
 
 const UsuarioController = {
   // Registrar un usuario
@@ -51,7 +52,11 @@ const UsuarioController = {
       }
 
       // Crear token JWT
-      const token = jwt.sign({ id: usuario._id, rol: usuario.rol }, 'secreto_super_seguro', { expiresIn: '1h' });
+      const token = jwt.sign(
+        { id: usuario._id, rol: usuario.rol },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
 
       res.status(200).json({ mensaje: 'Inicio de sesión exitoso', token });
     } catch (error) {
@@ -61,15 +66,23 @@ const UsuarioController = {
 
   // Middleware para verificar token y rol
   verificarToken(req, res, next) {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: 'Acceso denegado' });
+    const authHeader = req.header('Authorization');
+    if (!authHeader) {
+      return res.status(401).json({ error: 'Acceso denegado, token requerido' });
+    }
+
+    // Extraer token si viene con "Bearer "
+    const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : authHeader;
+    if (!token) {
+      return res.status(401).json({ error: 'Token inválido' });
+    }
 
     try {
-      const verificado = jwt.verify(token, 'secreto_super_seguro');
+      const verificado = jwt.verify(token, process.env.JWT_SECRET);
       req.usuario = verificado;
       next();
     } catch (error) {
-      res.status(400).json({ error: 'Token no válido' });
+      res.status(403).json({ error: 'Token no válido o expirado' });
     }
   },
 
